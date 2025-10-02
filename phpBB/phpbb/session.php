@@ -1143,6 +1143,11 @@ class session
 	{
 		global $phpbb_container, $phpbb_dispatcher;
 
+		if ($user_ips !== false) {
+			// Anonymize the IP if provided
+			$user_ips = anonymize_ip($user_ips);
+		}
+
 		if (defined('IN_CHECK_BAN') || defined('SKIP_CHECK_BAN'))
 		{
 			return false;
@@ -1470,6 +1475,9 @@ class session
 		$user_id = ($user_id === false) ? $this->data['user_id'] : $user_id;
 		$user_ip = ($user_ip === false) ? $this->ip : $user_ip;
 		$key = ($key === false) ? (($this->cookie_data['k']) ? $this->cookie_data['k'] : false) : $key;
+
+		// Anonymize the user IP
+		$user_ip = anonymize_ip($user_ip);
 
 		$key_id = unique_id();
 

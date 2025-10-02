@@ -184,6 +184,17 @@ function user_update_name($old_name, $new_name)
 * @param array $notifications_data The notifications settings for the new user
 * @return int  The new user's ID.
 */
+// Add this function to includes/functions_user.php
+function anonymize_ip($ip) {
+	if (strpos($ip, ':') !== false) {
+		// IPv6: mask last 80 bits
+		return preg_replace('/:[^:]+:[^:]+:[^:]+$/', ':0:0:0:0', $ip);
+	} else {
+		// IPv4: mask last octet
+		return preg_replace('/\d+$/', '0', $ip);
+	}
+}
+
 function user_add($user_row, $cp_data = false, $notifications_data = null)
 {
 	global $db, $config;
@@ -210,6 +221,10 @@ function user_add($user_row, $cp_data = false, $notifications_data = null)
 		'user_type'			=> $user_row['user_type'],
 	);
 
+	if (isset($request)) {
+		$user_ip = anonymize_ip($request->variable('user_ip', ''));
+	}
+
 	// These are the additional vars able to be specified
 	$additional_vars = array(
 		'user_permissions'			=> '',
@@ -218,7 +233,7 @@ function user_add($user_row, $cp_data = false, $notifications_data = null)
 		'user_lang'					=> $config['default_lang'],
 		'user_style'				=> (int) $config['default_style'],
 		'user_actkey'				=> '',
-		'user_ip'					=> '',
+		'user_ip'					=> $user_ip,
 		'user_regdate'				=> time(),
 		'user_passchg'				=> time(),
 		'user_options'				=> 230271,

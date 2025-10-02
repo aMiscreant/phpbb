@@ -410,22 +410,20 @@ foreach ($session_data_rowset as $row)
 	extract($phpbb_dispatcher->trigger_event('core.viewonline_overwrite_location', compact($vars)));
 
 	$template_row = array(
-		'USERNAME' 			=> $row['username'],
-		'USERNAME_COLOUR'	=> $row['user_colour'],
-		'USERNAME_FULL'		=> $username_full,
-		'LASTUPDATE'		=> $user->format_date($row['session_time']),
-		'FORUM_LOCATION'	=> $location,
-		'USER_IP'			=> ($auth->acl_get('a_')) ? (($mode == 'lookup' && $session_id == $row['session_id']) ? gethostbyaddr($row['session_ip']) : $row['session_ip']) : '',
-		'USER_BROWSER'		=> ($auth->acl_get('a_user')) ? $row['session_browser'] : '',
-
-		'U_USER_PROFILE'	=> ($row['user_type'] != USER_IGNORE) ? get_username_string('profile', $row['user_id'], '') : '',
-		'U_USER_IP'			=> append_sid("{$phpbb_root_path}viewonline.$phpEx", 'mode=lookup' . (($mode != 'lookup' || $row['session_id'] != $session_id) ? '&amp;s=' . $row['session_id'] : '') . "&amp;sg=$show_guests&amp;start=$start&amp;sk=$sort_key&amp;sd=$sort_dir"),
-		'U_WHOIS'			=> append_sid("{$phpbb_root_path}viewonline.$phpEx", 'mode=whois&amp;s=' . $row['session_id']),
-		'U_FORUM_LOCATION'	=> $location_url,
-
-		'S_USER_HIDDEN'		=> $s_user_hidden,
-		'S_GUEST'			=> ($row['user_id'] == ANONYMOUS) ? true : false,
-		'S_USER_TYPE'		=> $row['user_type'],
+		'USERNAME'           => $row['username'],
+		'USERNAME_COLOUR'    => $row['user_colour'],
+		'USERNAME_FULL'      => $username_full,
+		'LASTUPDATE'         => $user->format_date($row['session_time']),
+		'FORUM_LOCATION'     => $location,
+		'USER_IP'            => ($auth->acl_get('a_')) ? (($mode == 'lookup' && $session_id == $row['session_id']) ? gethostbyaddr(anonymize_ip($row['session_ip'])) : anonymize_ip($row['session_ip'])) : '',
+		'USER_BROWSER'       => ($auth->acl_get('a_user')) ? $row['session_browser'] : '',
+		'U_USER_PROFILE'     => ($row['user_type'] != USER_IGNORE) ? get_username_string('profile', $row['user_id'], '') : '',
+		'U_USER_IP'          => append_sid("{$phpbb_root_path}viewonline.$phpEx", 'mode=lookup' . (($mode != 'lookup' || $row['session_id'] != $session_id) ? '&amp;s=' . $row['session_id'] : '') . "&amp;sg=$show_guests&amp;start=$start&amp;sk=$sort_key&amp;sd=$sort_dir"),
+		'U_WHOIS'            => append_sid("{$phpbb_root_path}viewonline.$phpEx", 'mode=whois&amp;s=' . $row['session_id']),
+		'U_FORUM_LOCATION'   => $location_url,
+		'S_USER_HIDDEN'      => $s_user_hidden,
+		'S_GUEST'            => ($row['user_id'] == ANONYMOUS) ? true : false,
+		'S_USER_TYPE'        => $row['user_type'],
 	);
 
 	/**

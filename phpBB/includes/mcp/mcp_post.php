@@ -46,30 +46,25 @@ function mcp_post_details($id, $mode, $action)
 	$post_info = $post_info[$post_id];
 	$url = append_sid("{$phpbb_root_path}mcp.$phpEx?" . phpbb_extra_url());
 
-	switch ($action)
-	{
+	switch ($action) {
 		case 'whois':
-
-			if ($auth->acl_get('m_info', $post_info['forum_id']))
-			{
+			if ($auth->acl_get('m_info', $post_info['forum_id'])) {
 				$ip = $request->variable('ip', '');
-				if (!function_exists('user_ipwhois'))
-				{
+				if (!function_exists('user_ipwhois')) {
 					include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
 				}
 
+				// Anonymize the IP before passing it to user_ipwhois
+				$ip = anonymize_ip($ip);
+
 				$template->assign_vars(array(
-					'RETURN_POST'	=> sprintf($user->lang['RETURN_POST'], '<a href="' . append_sid("{$phpbb_root_path}mcp.$phpEx", "i=$id&amp;mode=$mode&amp;p=$post_id") . '">', '</a>'),
-					'U_RETURN_POST'	=> append_sid("{$phpbb_root_path}mcp.$phpEx", "i=$id&amp;mode=$mode&amp;p=$post_id"),
-					'L_RETURN_POST'	=> sprintf($user->lang['RETURN_POST'], '', ''),
-					'WHOIS'			=> user_ipwhois($ip),
+					'RETURN_POST'   => sprintf($user->lang['RETURN_POST'], '<a href="' . append_sid("{$phpbb_root_path}mcp.$phpEx", "i=$id&amp;mode=$mode&amp;p=$post_id") . '">', '</a>'),
+					'U_RETURN_POST' => append_sid("{$phpbb_root_path}mcp.$phpEx", "i=$id&amp;mode=$mode&amp;p=$post_id"),
+					'L_RETURN_POST' => sprintf($user->lang['RETURN_POST'], '', ''),
+					'WHOIS'          => user_ipwhois($ip),
 				));
 			}
-
-			// We're done with the whois page so return
-			return;
-
-		break;
+			break;
 
 		case 'chgposter':
 		case 'chgposter_ip':
