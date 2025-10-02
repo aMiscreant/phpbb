@@ -43,6 +43,8 @@
 /phpunit.xml
 /.phpunit.result.cache
 /phpBB/composer.phar
+/phpBB/composer.lock
+/phpBB/config/config.php
 /tests/phpbb_unit_tests.sqlite*
 /tests/test_config*.php
 /tests/tmp/*
@@ -51,6 +53,10 @@
 .vagrant
 node_modules
 /build/package_signature
+
+# Exclude build
+/phpBB/build/*
+!/phpBB/build/.gitkeep
 
 # Excludes IDE / editors files
 *~
